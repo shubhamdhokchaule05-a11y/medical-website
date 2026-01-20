@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCA Medical Wala - Complete Medical Store | Shrirampur</title>
+    <link rel="icon" href="favi1.jfif" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <script>
+        if (localStorage.getItem("bcaLoggedIn") !== "true") {
+            window.location.href = "login.html";
+        }
+    </script>
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* --- NAVBAR STYLES --- */
+        .navbar {
+            background: linear-gradient(90deg, #1e293b 0%, #0f172a 100%) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer {
+            background-color: #020617 !important;
+            border-top: 1px solid #334155;
+        }
+
+        /* --- HERO & PRODUCT STYLES --- */
+        .hero {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #06b6d4 100%);
+            color: white;
+            padding: 120px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .product-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border-radius: 20px;
+            overflow: hidden;
+            background: white;
+            height: 100%;
+        }
+
+        .product-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .product-img-container {
+            width: 100%;
+            height: 220px;
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding: 15px;
+        }
+
+        .product-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: transform 0.4s ease;
+        }
+
+        /* Custom Quantity Input on Card */
+        .qty-group {
+            display: flex;
+            align-items: center;
+            background: #f1f5f9;
+            border-radius: 8px;
+            padding: 2px;
+            margin-right: 8px;
+        }
+
+        .qty-group button {
+            border: none;
+            background: transparent;
+            color: #64748b;
+            width: 20px;
+            height: 28px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .qty-group button:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+
+        .qty-group input {
+            width: 20px;
+            text-align: center;
+            border: none;
+            background: transparent;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: inherit;
+            pointer-events: none;
+            /* User must use +/- buttons */
+        }
+
+        /* ADD TO CART BUTTON */
+        .add-cart-btn {
+            background: linear-gradient(45deg, #10b981, #059669);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            min-width: 85px;
+        }
+
+        .add-cart-btn:hover:not(.added) {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 12px 25px rgba(16, 185, 129, 0.5);
+        }
+
+        .add-cart-btn.added {
+            background: linear-gradient(45deg, #f59e0b, #d97706);
+            animation: pulseGlow 0.8s ease-in-out;
+        }
+
+        @keyframes pulseGlow {
+
+            0%,
+            100% {
+                transform: scale(1);
+                box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+            }
+
+            50% {
+                transform: scale(1.08);
+                box-shadow: 0 8px 20px rgba(245, 158, 11, 0.6);
+            }
+        }
+
+        .whatsapp-btn {
+            background: linear-gradient(45deg, #25D366, #128C7E) !important;
+            border: none !important;
+            color: white !important;
+            font-weight: 600 !important;
+            border-radius: 12px !important;
+            padding: 12px 24px !important;
+            font-size: 1.1rem !important;
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4) !important;
+            transition: all 0.3s !important;
+        }
+
+        .whatsapp-btn:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 12px 35px rgba(37, 211, 102, 0.5) !important;
+        }
+
+        .remove-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            font-size: 18px;
+            transition: all 0.2s;
+        }
+
+        .remove-btn:hover {
+            background: #dc2626;
+            transform: scale(1.1);
+        }
+
+        .quantity-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+            background: white;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .quantity-btn:hover:not(:disabled) {
+            background: #f3f4f6;
+        }
+
+        .search-box {
+            background: white;
+            border-radius: 50px;
+            padding: 12px 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 2px solid transparent;
+            transition: all 0.3s;
+            width: 300px;
+            color: #0f172a;
+        }
+
+        .search-box:focus-within {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .category-filter {
+            background: white;
+            border-radius: 12px;
+            padding: 8px 16px;
+            margin: 2px;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+            font-weight: 500;
+            color: #334155;
+        }
+
+        .category-filter.active,
+        .category-filter:hover {
+            background: #3b82f6;
+            color: white;
+            border-color: #2563eb;
+        }
+
+        .badge-stock {
+            background: #10b981;
+            color: white;
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 20px;
+        }
+
+        .badge-lowstock {
+            background: #f59e0b;
+            color: white;
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 20px;
+        }
+
+        .badge-expiry {
+            background: #6b7280;
+            color: white;
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 20px;
+        }
+
+        .receipt-card {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .upload-area {
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            background: #f8fafc;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .upload-area:hover {
+            border-color: #3b82f6;
+            background: #eff6ff;
+        }
+
+        .upload-preview {
+            max-height: 200px;
+            border-radius: 8px;
+            margin-top: 10px;
+            display: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            object-fit: contain;
+            max-width: 100%;
+            background: white;
+        }
+
+        .prescription-tag {
+            background: #e0f2fe;
+            color: #0369a1;
+            border: 1px solid #bae6fd;
+        }
+
+        /* TOAST NOTIFICATION */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+
+        .custom-toast {
+            background: white;
+            color: #333;
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.3s ease-out forwards;
+            border-left: 5px solid #3b82f6;
+            min-width: 280px;
+        }
+
+        .custom-toast.success {
+            border-left-color: #10b981;
+        }
+
+        .custom-toast.error {
+            border-left-color: #ef4444;
+        }
+
+        .custom-toast.info {
+            border-left-color: #3b82f6;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 80px 0;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem !important;
+            }
+
+            .add-cart-btn {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+
+            .search-box {
+                width: 100%;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- TOAST CONTAINER -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top shadow-lg">
+        <div class="container">
+            <a class="navbar-brand fw-bold fs-3" href="#"><i class="fas fa-pills me-2"></i>BCA Medical Wala</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#products">Products</a></li>
+                </ul>
+
+                <div class="d-flex align-items-center gap-2">
+                    <!-- Search Bar -->
+                    <form class="d-flex me-2">
+                        <div class="search-box position-relative">
+                            <i class="fas fa-search me-2 text-muted"></i>
+                            <input type="text" class="border-0 bg-transparent" id="searchInput"
+                                placeholder="Search medicines...">
+                            <!-- Voice Search Button -->
+                            <button type="button"
+                                class="btn btn-link text-muted position-absolute end-0 top-50 translate-middle-y p-0 me-2"
+                                id="voiceSearchBtn" title="Voice Search">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <ul class="navbar-nav ms-2">
+                    <li class="nav-item"><a class="nav-link position-relative" href="#" data-bs-toggle="modal"
+                            data-bs-target="#cartModal" id="cartLink">
+                            <i class="fas fa-shopping-cart me-1"></i>Cart <span
+                                class="badge bg-danger position-absolute top-0 start-100 translate-middle"
+                                id="cartBadge">0</span>
+                        </a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal"
+                            data-bs-target="#contactModal"><i class="fas fa-phone me-1"></i>Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero text-center text-white position-relative">
+        <div class="container position-relative">
+            <h1 class="display-3 fw-bold mb-4">BCA Medical Wala</h1>
+            <p class="lead mb-5 fs-4">✅ 50+ Genuine Medicines • ⚡ Fast Delivery in Shrirampur • 🏥 Licensed Pharmacy</p>
+            <a href="#products" class="btn btn-light btn-lg px-5 py-3 shadow-lg fs-5">Shop Now <i
+                    class="fas fa-arrow-down ms-2"></i></a>
+        </div>
+    </section>
+
+    <!-- Filters & Products -->
+    <section id="products" class="py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="display-4 fw-bold text-primary mb-3">Our Complete Product Range</h2>
+                <p class="lead text-muted">50+ High-quality medicines across all categories</p>
+            </div>
+
+            <!-- Filters -->
+            <div class="row mb-4 g-2">
+                <div class="col-12">
+                    <div class="d-flex flex-wrap gap-2 justify-content-center flex-lg-nowrap overflow-auto"
+                        style="max-width: 100%;">
+                        <button class="category-filter active" data-category="all">All Products</button>
+                        <button class="category-filter" data-category="fever">Fever (12)</button>
+                        <button class="category-filter" data-category="vitamin">Vitamins (8)</button>
+                        <button class="category-filter" data-category="pain">Pain Relief (10)</button>
+                        <button class="category-filter" data-category="cold">Cold & Cough (9)</button>
+                        <button class="category-filter" data-category="antibiotic">Antibiotics (6)</button>
+                        <button class="category-filter" data-category="stomach">Stomach Care (5)</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="row g-4" id="productsGrid">
+                <!-- Products populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Modal -->
+    <div class="modal fade" id="contactModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content rounded-4 shadow-lg">
+                <div class="modal-header bg-gradient text-white">
+                    <h5 class="modal-title"><i class="fas fa-phone me-2"></i>Contact BCA Medical Wala</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-4 text-center">
+                        <div class="col-md-4">
+                            <div class="bg-success p-4 rounded-3 shadow text-white">
+                                <i class="fas fa-phone fa-3x mb-3"></i>
+                                <h5>Call Us</h5>
+                                <a href="tel:+917517262390" class="fw-bold fs-5 d-block">+91 75172 62390</a>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="bg-primary p-4 rounded-3 shadow text-white">
+                                <i class="fas fa-envelope fa-3x mb-3"></i>
+                                <h5>Email</h5>
+                                <a href="mailto:shubhamdhokchaule05@gmail.com"
+                                    class="fw-bold fs-6 text-white text-decoration-none">shubhamdhokchaule05@gmail.com</a>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="bg-danger p-4 rounded-3 shadow text-white">
+                                <i class="fas fa-map-marker-alt fa-3x mb-3"></i>
+                                <h5>Location</h5>
+                                <div class="fs-6">Shrirampur<br>Maharashtra, India</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 p-3 bg-light rounded-3">
+                        <h6 class="text-success mb-2"><i class="fas fa-clock me-1"></i>Service Hours</h6>
+                        <p class="mb-0 small">📦 Same Day Delivery • ⏰ 8 AM - 10 PM • 🚚 Free within 5km • 💊 24x7
+                            Emergency</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div class="modal fade" id="cartModal" tabindex="-1">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content rounded-4 shadow-lg">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title"><i class="fas fa-shopping-cart me-2"></i>Shopping Cart</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+
+                    <!-- Patient Name -->
+                    <div class="mb-4">
+                        <label for="patientName" class="form-label text-muted fw-bold">Patient Name (required for
+                            order)</label>
+                        <input type="text" class="form-control form-control-lg" id="patientName"
+                            placeholder="Enter patient name" value="">
+                    </div>
+
+                    <!-- PRESCRIPTION UPLOAD SECTION -->
+                    <div class="mb-4 p-3 bg-light rounded-3 border border-2 border-dashed">
+                        <h6 class="fw-bold text-primary mb-3"><i class="fas fa-file-prescription me-2"></i>Upload
+                            Doctor's Prescription</h6>
+
+                        <div class="row g-3 align-items-center">
+                            <div class="col-md-4">
+                                <label for="prescriptionInput" class="upload-area d-block w-100 h-100">
+                                    <i class="fas fa-cloud-upload-alt fa-3x text-secondary mb-2"></i>
+                                    <div class="fw-bold">Click to Upload Photo</div>
+                                    <small class="text-muted d-block">Supports JPG, PNG</small>
+                                </label>
+                                <input type="file" id="prescriptionInput" accept="image/*" class="d-none">
+                            </div>
+                            <div class="col-md-8">
+                                <img id="prescriptionPreview" class="upload-preview" src="" alt="Prescription Preview">
+                                <div id="prescriptionForm" class="d-none">
+                                    <div class="alert alert-info py-2 small mb-2">
+                                        <i class="fas fa-info-circle me-1"></i> Image uploaded! Verify details to add.
+                                    </div>
+                                    <div class="row g-2">
+                                        <div class="col-12">
+                                            <input type="text" id="customMedName" class="form-control"
+                                                placeholder="Medicine Name">
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="number" id="customMedPrice" class="form-control"
+                                                placeholder="Est. Price (₹)">
+                                        </div>
+                                        <div class="col-6">
+                                            <button type="button" id="addCustomMedBtn" class="btn btn-primary w-100">
+                                                <i class="fas fa-plus me-1"></i> Add to Receipt
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="hasPrescription" value="false">
+                    </div>
+
+                    <!-- COUPON SECTION -->
+                    <div class="mb-4 p-3 bg-light rounded-3">
+                        <div class="row g-2 align-items-center">
+                            <div class="col-md-4">
+                                <label class="fw-bold small text-muted"><i class="fas fa-tag me-1"></i>Have a
+                                    Coupon?</label>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="couponCode" placeholder="Try FIRST10">
+                                    <button class="btn btn-outline-primary" type="button"
+                                        id="applyCouponBtn">Apply</button>
+                                </div>
+                            </div>
+                            <div class="col-md-3 text-end">
+                                <span id="couponStatus" class="small text-success fw-bold d-none">Coupon Applied!</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h5 class="fw-bold mb-3">Order Items</h5>
+                    <div id="cartItems"></div>
+
+                    <div id="emptyCartMsg" class="text-center py-5">
+                        <i class="fas fa-shopping-cart fa-5x text-muted mb-4 opacity-50"></i>
+                        <h4 class="text-muted mb-3">Your cart is empty</h4>
+                        <p class="text-muted mb-4">Add some medicines to get started!</p>
+                        <a href="#products" class="btn btn-primary btn-lg px-4" data-bs-dismiss="modal">Start
+                            Shopping</a>
+                    </div>
+
+                    <div class="border-top pt-4 d-none" id="cartTotalRow">
+                        <div class="receipt-card text-white">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h4 class="mb-3"><i class="fab fa-whatsapp me-2"></i>📋 Order Receipt</h4>
+                                    <div id="whatsappReceipt"></div>
+                                </div>
+                                <div class="col-md-4 text-end">
+                                    <div class="text-decoration-line-through opacity-75" id="originalTotalDisplay"
+                                        style="display:none">₹0</div>
+                                    <div class="fs-3 fw-bold mb-1" id="cartTotal">₹0</div>
+                                    <small class="opacity-75" id="discountLabel"></small><br>
+                                    <small class="opacity-75">Free delivery in Shrirampur</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Continue Shopping</button>
+                    <button class="btn whatsapp-btn btn-lg d-none" id="whatsappBtn">
+                        <i class="fab fa-whatsapp me-2"></i>Place Order on WhatsApp
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Details Modal -->
+    <div class="modal fade" id="productModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content rounded-4 shadow-lg">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="productTitle">Product Details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="productDetails"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-5 mt-auto footer">
+        <div class="container text-center">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5><i class="fas fa-pills me-2 text-primary"></i>BCA Medical Wala</h5>
+                    <p class="mb-2">✅ Licensed Pharmacy • Shrirampur, Maharashtra</p>
+                    <p class="mb-0 small">50+ Genuine Medicines • Fast Local Delivery</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-2"><i class="fas fa-phone me-2"></i>+91 75172 62390</p>
+                    <p class="mb-0"><i class="fas fa-envelope me-2"></i>shubhamdhokchaule05@gmail.com</p>
+                </div>
+            </div>
+            <hr class="my-4">
+            <p class="mb-0">&copy; 2026 BCA Medical Wala • All Rights Reserved • Licensed & Genuine Medicines Only</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+
+
+        // --- CONSTANTS & STATE ---
+        const exchangeRate = 82;
+        const whatsappNumber = "917517262390";
+        let cart = JSON.parse(localStorage.getItem('bcaMedicalCart') || '[]');
+        let patientName = localStorage.getItem('bcaPatientName') || '';
+        let discountPercent = 0;
+
+        // Set initial patient name
+        document.getElementById('patientName').value = patientName;
+
+        // --- TOAST NOTIFICATION LOGIC ---
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `custom-toast ${type}`;
+
+            let icon = 'fa-check-circle';
+            if (type === 'error') icon = 'fa-exclamation-circle';
+            if (type === 'info') icon = 'fa-info-circle';
+
+            toast.innerHTML = `
+                <i class="fas ${icon} fs-5"></i>
+                <span class="fw-medium">${message}</span>
+            `;
+
+            container.appendChild(toast);
+
+            // Remove after 3 seconds
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // --- VOICE SEARCH LOGIC ---
+        const voiceSearchBtn = document.getElementById('voiceSearchBtn');
+        const searchInput = document.getElementById('searchInput');
+
+        if ('webkitSpeechRecognition' in window) {
+            const recognition = new webkitSpeechRecognition();
+            recognition.continuous = false;
+            recognition.lang = 'en-US';
+
+            voiceSearchBtn.addEventListener('click', () => {
+                voiceSearchBtn.classList.add('text-danger'); // Red while listening
+                recognition.start();
+                showToast("Listening... Speak medicine name", "info");
+            });
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                searchInput.value = transcript;
+                voiceSearchBtn.classList.remove('text-danger');
+
+                // Trigger search manually
+                const term = transcript.toLowerCase();
+                const filtered = products.filter(p => p.name.toLowerCase().includes(term));
+                renderProducts(filtered);
+                showToast(`Found results for: ${transcript}`, "success");
+            };
+
+            recognition.onerror = () => {
+                voiceSearchBtn.classList.remove('text-danger');
+                showToast("Could not understand audio", "error");
+            };
+
+            recognition.onend = () => {
+                voiceSearchBtn.classList.remove('text-danger');
+            };
+        } else {
+            voiceSearchBtn.style.display = 'none'; // Hide if not supported
+        }
+
+        // --- COUPON LOGIC ---
+        const coupons = {
+            'FIRST10': 10,
+            'MEDIC5': 5,
+            'BCA20': 20
+        };
+
+        document.getElementById('applyCouponBtn').addEventListener('click', () => {
+            const code = document.getElementById('couponCode').value.trim().toUpperCase();
+            const statusEl = document.getElementById('couponStatus');
+
+            if (coupons[code]) {
+                discountPercent = coupons[code];
+                statusEl.textContent = `${discountPercent}% Discount Applied!`;
+                statusEl.classList.remove('d-none');
+                statusEl.className = 'small text-success fw-bold';
+                showToast(`Coupon ${code} applied successfully!`, "success");
+                updateCart(); // Recalculate totals
+            } else {
+                discountPercent = 0;
+                statusEl.textContent = 'Invalid Coupon Code';
+                statusEl.classList.remove('d-none');
+                statusEl.className = 'small text-danger fw-bold';
+                showToast("Invalid coupon code", "error");
+                updateCart();
+            }
+        });
+
+        // --- PRODUCTS DATA ---
+        // Helper to get placeholder if img is missing (fallback)
+        const getImgUrl = (name, seed) => `https://placehold.co/300x300/f1f5f9/334155?text=${encodeURIComponent(name)}&font=roboto`;
+
+        const products = [
+            // FEVER (12)
+            { name: "Paracip-650mg", price: 0.49, category: "fever", uses: "Fever, Headache", mfg: "2025", exp: "2027", dosage: "1 tab 6 hrs", stock: "In Stock", img: "images/paracetamol.webp" },
+            { name: "Crocin Advance", price: 0.49, category: "fever", uses: "Fever & Pain", mfg: "2025", exp: "2027", dosage: "1 tab 6 hrs", stock: "In Stock", img: "images/crocin.webp" },
+            { name: "Calpol 500mg", price: 0.35, category: "fever", uses: "Fever Reduction", mfg: "2025", exp: "2027", dosage: "1 tab 6 hrs", stock: "In Stock", img: "images/calpol-500mg.jpg" },
+            { name: "Dolo 650mg", price: 0.45, category: "fever", uses: "Fever & Body Pain", mfg: "2025", exp: "2027", dosage: "1 tab 8 hrs", stock: "Low Stock", img: "images/dolo.webp" },
+            { name: "Meftal Forte", price: 0.55, category: "fever", uses: "Severe Pain", mfg: "2025", exp: "2027", dosage: "1 tab 8 hrs", stock: "In Stock", img: "images/meftal.webp" },
+            { name: "Ibuprofen 400mg", price: 0.42, category: "fever", uses: "Inflammation", mfg: "2025", exp: "2027", dosage: "1 tab 8 hrs", stock: "In Stock", img: "images/ibuprofen.webp" },
+            { name: "Sumo Tablet", price: 0.65, category: "fever", uses: "Fever + Pain", mfg: "2025", exp: "2026", dosage: "1 tab daily", stock: "In Stock", img: "images/sumo.webp" },
+            { name: "PCM 500mg", price: 0.32, category: "fever", uses: "General Fever", mfg: "2025", exp: "2027", dosage: "1 tab 6 hrs", stock: "In Stock", img: "images/pcm.webp" },
+            { name: "Saridon", price: 0.38, category: "fever", uses: "Headache", mfg: "2025", exp: "2027", dosage: "1 tab 6 hrs", stock: "Low Stock", img: "images/saridon.webp" },
+            { name: "Medol 650mg", price: 0.47, category: "fever", uses: "High Fever", mfg: "2025", exp: "2027", dosage: "1 tab 6 hrs", stock: "In Stock", img: "images/medol.webp" },
+            { name: "Crocin Pediatric", price: 0.28, category: "fever", uses: "Kids Fever", mfg: "2025", exp: "2027", dosage: "As per age", stock: "In Stock", img: "images/crocin pediatric.webp" },
+
+            // VITAMINS (8)
+            { name: "Limcee Vit C", price: 0.39, category: "vitamin", uses: "Immunity", mfg: "2025", exp: "2027", dosage: "1 tab daily", stock: "In Stock", img: "images/Limcee.webp" },
+            { name: "Neurobion Forte", price: 0.85, category: "vitamin", uses: "Nerve Health", mfg: "2025", exp: "2027", dosage: "1 tab daily", stock: "In Stock", img: "images/NeurobionFort.webp" },
+            { name: "Becosules", price: 0.42, category: "vitamin", uses: "B-Complex", mfg: "2025", exp: "2027", dosage: "1 cap daily", stock: "In Stock", img: "images/Becosules.webp" },
+            { name: "Revital H", price: 1.25, category: "vitamin", uses: "Energy", mfg: "2025", exp: "2026", dosage: "1 cap daily", stock: "Low Stock", img: "images/ravital.webp" },
+            { name: "Calcirol Sachet", price: 0.75, category: "vitamin", uses: "Vit D3", mfg: "2025", exp: "2027", dosage: "1 weekly", stock: "In Stock", img: "images/calcirol.webp" },
+            { name: "Zincovit", price: 0.68, category: "vitamin", uses: "Multi-vit", mfg: "2025", exp: "2027", dosage: "1 tab daily", stock: "In Stock", img: "images/zincovit.webp" },
+            { name: "Vitamin E", price: 0.89, category: "vitamin", uses: "Skin Health", mfg: "2025", exp: "2027", dosage: "1 cap daily", stock: "In Stock", img: "images/vitamin e.jpg" },
+            // PAIN RELIEF (10)
+            { name: "Crocin Pain Relief", price: 0.49, category: "pain", uses: "Pain Relief", mfg: "2025", exp: "2027", dosage: "1-2 tabs 6h", stock: "In Stock", img: "images/crocinPainrelief.webp" },
+            { name: "Combiflam", price: 0.52, category: "pain", uses: "Pain + Inflam.", mfg: "2025", exp: "2027", dosage: "1 tab 8 hrs", stock: "In Stock", img: "images/combiflam.jpg" },
+            { name: "Voveran 50mg", price: 0.78, category: "pain", uses: "Muscle Pain", mfg: "2025", exp: "2027", dosage: "1 tab daily", stock: "Low Stock", img: "images/Voveran.webp" },
+            { name: "Zero Pain Spray", price: 2.50, category: "pain", uses: "Instant Relief", mfg: "2025", exp: "2026", dosage: "Spray 2-3x", stock: "In Stock", img: "images/zeroPain.webp" },
+            { name: "Hifenac P", price: 0.60, category: "pain", uses: "Pain + Fever", mfg: "2025", exp: "2027", dosage: "1 tab 8 hrs", stock: "In Stock", img: "images/Hifenac.webp" },
+            { name: "Aceclo MR", price: 0.72, category: "pain", uses: "Muscle Spasm", mfg: "2025", exp: "2027", dosage: "1 tab daily", stock: "In Stock", img: "images/Aceclo.webp" },
+            { name: "Nise Tablet", price: 0.58, category: "pain", uses: "Acute Pain", mfg: "2025", exp: "2027", dosage: "1 tab 12 hrs", stock: "In Stock", img: "images/nise.webp" },
+            { name: "Etoshine 90mg", price: 0.95, category: "pain", uses: "Arthritis", mfg: "2025", exp: "2027", dosage: "1 tab daily", stock: "In Stock", img: "images/etoshine.webp" },
+            { name: "Flexon", price: 0.48, category: "pain", uses: "Body Pain", mfg: "2025", exp: "2027", dosage: "1 tab 8 hrs", stock: "Low Stock", img: "images/flexon.webp" },
+            { name: "Painkiller Gel", price: 1.80, category: "pain", uses: "Topical Pain", mfg: "2025", exp: "2026", dosage: "Apply 2-3x", stock: "In Stock", img: "images/painKiller.jpg" },
+
+            // COLD & COUGH (9)
+            { name: "Ascoril D", price: 1.25, category: "cold", uses: "Dry Cough", mfg: "2025", exp: "2026", dosage: "5ml 2-3x", stock: "In Stock", img: "images/ascoril.webp" },
+            { name: "Corex DX", price: 1.45, category: "cold", uses: "Cough + Cold", mfg: "2025", exp: "2026", dosage: "10ml 2x", stock: "Low Stock", img: "images/corex.webp" },
+            { name: "Sinarest", price: 0.42, category: "cold", uses: "Cold + Allergy", mfg: "2025", exp: "2027", dosage: "1 tab 6 hrs", stock: "In Stock", img: "images/sinarest.jpg" },
+            { name: "Coughnil", price: 0.95, category: "cold", uses: "Productive Cough", mfg: "2025", exp: "2026", dosage: "5ml 3x", stock: "In Stock", img: "images/coughnil.webp" },
+            { name: "Alex Junior", price: 1.15, category: "cold", uses: "Kids Cough", mfg: "2025", exp: "2026", dosage: "As per age", stock: "In Stock", img: "images/alexJunior.webp" },
+            { name: "Vicks Action 500", price: 0.38, category: "cold", uses: "Cold + Congestion", mfg: "2025", exp: "2027", dosage: "1 tab 6 hrs", stock: "In Stock", img: "images/vicks.webp" },
+            { name: "Koflet", price: 0.25, category: "cold", uses: "Sore Throat", mfg: "2025", exp: "2027", dosage: "1 lozenge 4x", stock: "In Stock", img: "images/koflet.webp" },
+            { name: "Otrivin", price: 1.20, category: "cold", uses: "Nasal Drops", mfg: "2025", exp: "2026", dosage: "2 drops 3x", stock: "Low Stock", img: "images/otrivin.webp" },
+
+            // ANTIBIOTICS (6)
+            { name: "Augmentin 625", price: 2.15, category: "antibiotic", uses: "Bacterial Inf.", mfg: "2025", exp: "2027", dosage: "1 tab 2x", stock: "In Stock", img: "images/augmentin.jpeg" },
+            { name: "Cefixime 200", price: 1.85, category: "antibiotic", uses: "Throat Inf.", mfg: "2025", exp: "2027", dosage: "1 tab 2x", stock: "Low Stock", img: "images/cefixime.jpg" },
+            { name: "Azithral 500", price: 1.95, category: "antibiotic", uses: "Resp. Inf.", mfg: "2025", exp: "2027", dosage: "1 tab daily", stock: "In Stock", img: "images/axithral.webp" },
+            { name: "Amox 500", price: 0.85, category: "antibiotic", uses: "Infection", mfg: "2025", exp: "2027", dosage: "1 tab 3x", stock: "In Stock", img: "images/amox.jpg" },
+            { name: "Ciplox 500", price: 0.95, category: "antibiotic", uses: "UTI", mfg: "2025", exp: "2027", dosage: "1 tab 2x", stock: "In Stock", img: "images/ciplox.webp" },
+            { name: "Oflox 200", price: 0.78, category: "antibiotic", uses: "Mixed Inf.", mfg: "2025", exp: "2027", dosage: "1 tab 2x", stock: "Low Stock", img: "images/oflox.webp" },
+
+            // STOMACH CARE (5)
+            { name: "Pantocid 40", price: 0.68, category: "stomach", uses: "Acidity", mfg: "2025", exp: "2027", dosage: "1 tab daily", stock: "In Stock", img: "images/pantocid.webp" },
+            { name: "Rantac 150", price: 0.35, category: "stomach", uses: "Heartburn", mfg: "2025", exp: "2027", dosage: "1 tab 2x", stock: "In Stock", img: "images/rantac.png" },
+            { name: "Esofag 20", price: 0.55, category: "stomach", uses: "Acid Reflux", mfg: "2025", exp: "2027", dosage: "1 cap daily", stock: "In Stock", img: "images/esofag.webp" },
+            { name: "Norflox TZ", price: 0.92, category: "stomach", uses: "Diarrhea", mfg: "2025", exp: "2027", dosage: "1 tab 2x", stock: "Low Stock", img: "images/norflox.jpg" },
+            { name: "Electral", price: 0.28, category: "stomach", uses: "Dehydration", mfg: "2025", exp: "2027", dosage: "1 sachet", stock: "In Stock", img: "images/electral.webp" }
+        ];
+
+        // --- PRESCRIPTION UPLOAD LOGIC ---
+        const prescriptionInput = document.getElementById('prescriptionInput');
+        const prescriptionPreview = document.getElementById('prescriptionPreview');
+        const prescriptionForm = document.getElementById('prescriptionForm');
+        const addCustomMedBtn = document.getElementById('addCustomMedBtn');
+        const hasPrescriptionInput = document.getElementById('hasPrescription');
+
+        prescriptionInput.addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    prescriptionPreview.src = e.target.result;
+                    prescriptionPreview.style.display = 'block';
+                    prescriptionForm.classList.remove('d-none');
+                    hasPrescriptionInput.value = "true";
+                    showToast("Prescription image uploaded!", "info");
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        addCustomMedBtn.addEventListener('click', function () {
+            const name = document.getElementById('customMedName').value.trim();
+            let price = document.getElementById('customMedPrice').value.trim();
+
+            if (!name) {
+                showToast("Please enter the medicine name.", "error");
+                return;
+            }
+
+            let basePrice = 0;
+            if (price) {
+                basePrice = parseFloat(price) / exchangeRate;
+            } else {
+                basePrice = 0;
+            }
+
+            addToCart(name + " (Prescription)", basePrice);
+
+            // Clear inputs
+            document.getElementById('customMedName').value = '';
+            document.getElementById('customMedPrice').value = '';
+            showToast("Medicine added from prescription!", "success");
+        });
+
+        // --- CORE FUNCTIONS ---
+
+        function generateWhatsAppMessage() {
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity * exchangeRate), 0);
+            const discountAmount = subtotal * (discountPercent / 100);
+            const total = subtotal - discountAmount;
+
+            const orderDate = new Date().toLocaleString('en-IN', {
+                timeZone: 'Asia/Kolkata',
+                weekday: 'short',
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            let itemsList = cart.map(item =>
+                `💊 *${item.name}*\n   Qty: ${item.quantity} | ₹${(item.price * exchangeRate).toFixed(0)}/pc\n   Subtotal: ₹${(item.price * item.quantity * exchangeRate).toFixed(0)}`
+            ).join('\n\n');
+
+            const patient = patientName.trim() ? patientName.trim() : "Not provided";
+            const hasPrescription = hasPrescriptionInput.value === "true";
+
+            let prescriptionNote = "";
+            if (hasPrescription) {
+                prescriptionNote = `\n\n⚠️ *IMPORTANT:* The customer has uploaded a Doctor's Prescription photo. \n➡️ Please ask the customer to forward the image in this chat for verification.`;
+            }
+
+            let couponText = "";
+            if (discountPercent > 0) {
+                couponText = `\n🏷️ *Discount Applied:* -${discountPercent}% (₹${discountAmount.toFixed(0)})`;
+            }
+
+            const message = `🏥 *BCA Medical Wala - Order Request* 🏥
+
+👤 *Patient Name:* ${patient}
+
+📅 *Order Date:* ${orderDate}
+🛒 *Order Items:*
+
+ ${itemsList}
+ 
+ 💰 *Subtotal:* ₹${subtotal.toFixed(0)}${couponText}
+
+🟢 *Total Payable:* ₹${total.toFixed(0)}
+📍 *Delivery:* Shrirampur (Free within 5km)
+⏰ *Service Hours:* 8 AM - 10 PM
+
+*Customer Details:*
+📱 Send your Name & Address in reply
+
+*Instructions:*
+1️⃣ Confirm order & make payment
+2️⃣ Same day delivery available
+3️⃣ Call *+91 75172 62390* for queries
+ ${prescriptionNote}
+
+*Order ID:* #BCA-${Date.now().toString().slice(-6)}`;
+
+            return message;
+        }
+
+        function renderProducts(productsToShow = products) {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = productsToShow.map(p => {
+                const badgeClass = p.stock === 'In Stock' ? 'badge-stock' : 'badge-lowstock';
+                // Use p.img if available, else use placeholder
+                const displayImg = p.img ? p.img : getImgUrl(p.name, p.category);
+
+                return `
+                <div class="col-lg-3 col-md-4 col-sm-6 product-item" data-category="${p.category}">
+                    <div class="card product-card h-100" data-product='${JSON.stringify(p)}'>
+                        <div class="product-img-container">
+                             <img src="${displayImg}" class="card-img-top product-img" alt="${p.name}" loading="lazy" onerror="this.src='${getImgUrl(p.name, p.category)}'">
+                        </div>
+                        <div class="card-body d-flex flex-column p-4">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="badge ${badgeClass}">${p.stock}</span>
+                                <span class="badge badge-expiry">Exp: ${p.exp}</span>
+                            </div>
+                            <h6 class="card-title fw-semibold mb-3">${p.name}</h6>
+                            <div class="d-flex justify-content-between align-items-end mt-auto">
+                                <div class="text-success fs-4 fw-bold">₹${(p.price * exchangeRate).toFixed(0)}</div>
+                                
+                                <!-- Add to Cart with Qty Selector -->
+                                <div class="d-flex align-items-center">
+                                    <div class="qty-group">
+                                        <button type="button" class="qty-minus" onclick="adjustCardQty(this, -1)">−</button>
+                                        <input type="text" class="qty-input" value="1" readonly>
+                                        <button type="button" class="qty-plus" onclick="adjustCardQty(this, 1)">+</button>
+                                    </div>
+                                    <button class="btn add-cart-btn" 
+                                            data-product-name="${p.name}" 
+                                            data-product-price="${p.price}">
+                                        <i class="fas fa-plus me-1"></i>Add
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        // Adjusts the quantity on the product card before adding
+        function adjustCardQty(btn, change) {
+            const input = btn.parentElement.querySelector('input');
+            let val = parseInt(input.value);
+            val += change;
+            if (val < 1) val = 1;
+            if (val > 10) val = 10; // Max limit per click
+            input.value = val;
+        }
+
+        function updateCart() {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cartBadge').textContent = totalItems || 0;
+            document.getElementById('cartBadge').style.display = totalItems ? 'inline' : 'none';
+
+            const cartItemsEl = document.getElementById('cartItems');
+            const emptyMsg = document.getElementById('emptyCartMsg');
+            const totalRow = document.getElementById('cartTotalRow');
+            const checkoutBtn = document.getElementById('whatsappBtn');
+            const totalEl = document.getElementById('cartTotal');
+            const receiptEl = document.getElementById('whatsappReceipt');
+            const originalTotalDisplay = document.getElementById('originalTotalDisplay');
+            const discountLabel = document.getElementById('discountLabel');
+
+            if (cart.length === 0) {
+                cartItemsEl.innerHTML = '';
+                emptyMsg.classList.remove('d-none');
+                totalRow.classList.add('d-none');
+                checkoutBtn.classList.add('d-none');
+                localStorage.setItem('bcaMedicalCart', JSON.stringify(cart));
+                return;
+            }
+
+            emptyMsg.classList.add('d-none');
+            let subtotal = 0;
+
+            cartItemsEl.innerHTML = cart.map((item, index) => {
+                const lineTotal = item.price * item.quantity * exchangeRate;
+                subtotal += lineTotal;
+
+                const isPrescription = item.name.includes("(Prescription)");
+                const badge = isPrescription ? '<span class="badge prescription-tag ms-2"><i class="fas fa-file-prescription"></i></span>' : '';
+
+                return `
+                    <div class="cart-item p-3 border-bottom">
+                        <div class="row align-items-center">
+                            <div class="col-2">
+                                <div class="bg-light rounded-circle d-flex align-items-center justify-content-center" style="width:60px;height:60px;">
+                                    💊
+                                </div>
+                            </div>
+                            <div class="col-5">
+                                <h6 class="mb-1 fw-semibold">${item.name} ${badge}</h6>
+                                <small class="text-muted">₹${(item.price * exchangeRate).toFixed(0)} each</small>
+                            </div>
+                            <div class="col-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <button class="quantity-btn" onclick="updateQuantity(${index}, -1)">−</button>
+                                    <span class="fw-bold fs-6">${item.quantity}</span>
+                                    <button class="quantity-btn" onclick="updateQuantity(${index}, 1)">+</button>
+                                </div>
+                            </div>
+                            <div class="col-2 text-end">
+                                <div class="fw-bold fs-5 text-success">₹${lineTotal.toFixed(0)}</div>
+                                <button class="btn remove-btn ms-1 mt-1" onclick="removeFromCart(${index})" title="Remove">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Calculate Discount
+            const discountAmount = subtotal * (discountPercent / 100);
+            const finalTotal = subtotal - discountAmount;
+
+            // Update Receipt
+            receiptEl.innerHTML = (patientName.trim() ? `<div class="mb-2"><strong>👤 Patient Name:</strong> ${patientName.trim()}</div>` : '') +
+                cart.map(item =>
+                    `<div class="mb-2"><strong>${item.name}</strong><br><small>Qty: ${item.quantity} | ₹${(item.price * item.quantity * exchangeRate).toFixed(0)}</small></div>`
+                ).join('');
+
+            if (discountPercent > 0) {
+                receiptEl.innerHTML += `<hr class="my-2"><div class="text-decoration-line-through small">Subtotal: ₹${subtotal.toFixed(0)}</div>`;
+                originalTotalDisplay.style.display = 'block';
+                originalTotalDisplay.textContent = `₹${subtotal.toFixed(0)}`;
+                discountLabel.textContent = `Discount: -${discountPercent}%`;
+            } else {
+                originalTotalDisplay.style.display = 'none';
+                discountLabel.textContent = '';
+            }
+
+            receiptEl.innerHTML += `<div class="fs-5 fw-bold">Total: ₹${finalTotal.toFixed(0)}</div>`;
+
+            totalEl.textContent = `₹${finalTotal.toFixed(0)}`;
+            totalRow.classList.remove('d-none');
+            checkoutBtn.classList.remove('d-none');
+            localStorage.setItem('bcaMedicalCart', JSON.stringify(cart));
+        }
+
+        function addToCart(name, price, qty = 1) {
+            const existing = cart.find(item => item.name === name);
+            if (existing) {
+                existing.quantity += qty;
+            } else {
+                cart.push({ name, price: parseFloat(price), quantity: qty });
+            }
+            updateCart();
+        }
+
+        function updateQuantity(index, change) {
+            cart[index].quantity += change;
+            if (cart[index].quantity <= 0) {
+                cart.splice(index, 1);
+            }
+            updateCart();
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCart();
+        }
+
+        // Save patient name
+        document.getElementById('patientName').addEventListener('input', function (e) {
+            patientName = e.target.value;
+            localStorage.setItem('bcaPatientName', patientName);
+            updateCart();
+        });
+
+        // WhatsApp Order Button
+        document.getElementById('whatsappBtn').addEventListener('click', function () {
+            if (!patientName.trim()) {
+                showToast('Please enter the patient name.', 'error');
+                document.getElementById('patientName').focus();
+                return;
+            }
+            const message = generateWhatsAppMessage();
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        });
+
+        // Event Listeners
+        document.addEventListener('click', function (e) {
+            const addBtn = e.target.closest('.add-cart-btn');
+            if (addBtn) {
+                const name = addBtn.dataset.productName;
+                const price = addBtn.dataset.productPrice;
+
+                // Get quantity from the input next to the button
+                const parentContainer = addBtn.closest('.d-flex.align-items-end'); // Flex container holding qty group
+                const qtyInput = parentContainer.querySelector('.qty-input');
+                const qty = parseInt(qtyInput.value);
+
+                addBtn.innerHTML = '<i class="fas fa-check me-1"></i>Added!';
+                addBtn.classList.add('added');
+                addToCart(name, price, qty);
+
+                // Reset Qty Input to 1 after add
+                qtyInput.value = 1;
+
+                setTimeout(() => {
+                    addBtn.innerHTML = '<i class="fas fa-plus me-1"></i>Add';
+                    addBtn.classList.remove('added');
+                }, 1500);
+                e.preventDefault();
+                return;
+            }
+
+            const productCard = e.target.closest('.product-card');
+            if (productCard && !e.target.closest('.add-cart-btn') && !e.target.closest('.qty-group')) {
+                const productData = JSON.parse(productCard.dataset.product);
+                // Logic to get image again
+                const displayImg = productData.img ? productData.img : getImgUrl(productData.name, productData.category);
+
+                document.getElementById('productTitle').textContent = productData.name;
+                document.getElementById('productDetails').innerHTML = `
+                    <div class="row g-4">
+                        <div class="col-md-5">
+                            <img src="${displayImg}" class="img-fluid rounded-3 shadow-lg w-100" style="object-fit:contain; background:#f8fafc; padding:20px;" alt="${productData.name}" onerror="this.src='${getImgUrl(productData.name, productData.category)}'">
+                        </div>
+                        <div class="col-md-7">
+                            <h4 class="fw-bold text-primary mb-3">${productData.name}</h4>
+                            <div class="mb-3 p-3 bg-light rounded-3">
+                                <div class="d-flex justify-content-between">
+                                    <span class="fs-5 fw-bold text-success">₹${(productData.price * exchangeRate).toFixed(0)}</span>
+                                    <span class="badge fs-6 ${productData.stock === 'In Stock' ? 'bg-success' : 'bg-warning'}">${productData.stock}</span>
+                                </div>
+                            </div>
+                            <div class="row g-3 mb-4">
+                                <div class="col-6"><strong>📋 Uses:</strong> ${productData.uses}</div>
+                                <div class="col-6"><strong>💊 Dosage:</strong> ${productData.dosage}</div>
+                                <div class="col-6"><strong>📅 Mfg:</strong> ${productData.mfg}</div>
+                                <div class="col-6"><strong>📄 Exp:</strong> ${productData.exp}</div>
+                            </div>
+                            <button class="btn btn-success w-100 btn-lg" onclick="addToCart('${productData.name}', ${productData.price}); bootstrap.Modal.getInstance(document.getElementById('productModal')).hide();">
+                                <i class="fas fa-shopping-cart me-2"></i>Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                `;
+                new bootstrap.Modal(document.getElementById('productModal')).show();
+            }
+        });
+
+        // Search and Filter
+        document.getElementById('searchInput').addEventListener('input', function (e) {
+            const term = e.target.value.toLowerCase();
+            const filtered = products.filter(p => p.name.toLowerCase().includes(term));
+            renderProducts(filtered);
+        });
+
+        document.querySelectorAll('.category-filter').forEach(btn => {
+            btn.addEventListener('click', function () {
+                document.querySelectorAll('.category-filter').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                const category = this.dataset.category;
+                const filtered = category === 'all' ? products : products.filter(p => p.category === category);
+                renderProducts(filtered);
+            });
+        });
+
+        // Initialize
+        document.getElementById('cartModal').addEventListener('shown.bs.modal', updateCart);
+        renderProducts();
+        updateCart();
+    </script>
+</body>
+
+</html>
